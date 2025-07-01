@@ -92,9 +92,9 @@ The system follows a **two-phase pipeline**: **stereo calibration** and **3D tra
 1. **Connect both USB cameras** to your system  
 2. **Calibrate stereo setup**:
 
-
+```python
 python stereo_calibrate.py
-
+```
 ## 🔍 Sample Results
 
 - ✔️ Accurate disparity and depth reconstruction  
