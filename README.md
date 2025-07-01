@@ -1,123 +1,124 @@
-**🛰️ Drone Model Tracking Using Stereo Vision**
+# 🛰️ Drone Model Tracking Using Stereo Vision
 
-This project implements a 3D drone tracking system using a stereo camera setup and computer vision techniques. The system reconstructs the 3D trajectory of a drone model in real-time based on depth information derived from a calibrated stereo rig.
+This project implements a **real-time 3D drone tracking system** using a stereo camera setup and classical computer vision techniques. The system reconstructs the drone’s spatial trajectory based on depth information derived from a **calibrated stereo rig**.
 
-**📍 Designed for indoor use with affordable hardware and open-source libraries (OpenCV, NumPy).**
+> 📍 Optimized for indoor environments using affordable webcams and open-source libraries (OpenCV, NumPy).
 
+---
 
-**🎯 Project Objectives**
+## 🎯 Objectives
 
-Calibrate a stereo vision system using a chessboard pattern.
+- ✅ Calibrate a stereo vision system using a printed chessboard  
+- ✅ Capture synchronized video streams from two webcams  
+- ✅ Compute disparity maps and extract depth  
+- ✅ Track a drone (or marker) in 3D space  
+- ✅ Visualize its position on live plots  
 
-Capture synchronized video from two cameras.
+---
 
-Compute disparity maps and reconstruct depth.
+## 🧠 Algorithm Description
 
-Detect and track a drone's position in 3D space.
+The system follows a **two-phase pipeline**: **stereo calibration** and **3D tracking**.
 
-Plot the real-time position of the drone based on disparity.
+### 🔧 Stereo Calibration
 
+1. Detect chessboard corners in both left and right camera frames  
+2. Capture valid stereo pairs using the `SPACE` key  
+3. Perform:
+   - Monocular calibration for each camera  
+   - Stereo calibration to compute rotation matrix `R` and translation vector `T`  
+4. Apply **image rectification** to align stereo images horizontally
 
-**🧪 System Assumptions**
+📸 Example calibration steps:
 
-Stereo calibration uses a 14×10 chessboard (13×9 internal corners) printed on A3 paper.
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/bea68b14-f4af-40aa-9bf6-8f152d1d8c7b" width="30%" />
+  <img src="https://github.com/user-attachments/assets/fc5b2436-17bb-44a4-b301-035a30a380cc" width="30%" />
+  <img src="https://github.com/user-attachments/assets/2504c4ed-71ed-415c-b1cb-679e89619da9" width="30%" />
+</p>
 
-Tracking occurs indoors with constant lighting.
+---
 
-A marker or small drone model is used for testing.
+### 📐 Depth Estimation & Drone Tracking
 
-Cameras are mounted on a rigid stereo frame with known baseline.
+- Computes **disparity maps** using OpenCV’s `StereoSGBM` algorithm  
+- Applies **rectification maps** for pixel correspondence  
+- Uses **contour detection** or color-based filtering to localize the drone  
+- Computes **3D coordinates** based on disparity and camera matrices  
+- **Plots 3D trajectory** of the drone in real time using matplotlib
 
+📊 Sample output:
 
-**🧰 Tools & Technologies**
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/e879e29c-ee57-4547-a029-2a1609b10b8b" width="45%" />
+  <img src="https://github.com/user-attachments/assets/99f9c240-6fa3-484a-b9b8-fb7670cb4ff4" width="45%" />
+  <br/><br/>
+  <img src="https://github.com/user-attachments/assets/9f28aa7e-2cad-478b-a797-824c22f0ef41" width="60%" />
+</p>
 
-🔧 Hardware
+---
 
-2× USB Quad-HD 2K webcams (F-A489 model)
+## 🧪 System Assumptions
 
-A3 calibration chessboard
+| Parameter             | Details                                   |
+|----------------------|-------------------------------------------|
+| Calibration pattern  | A3 chessboard, 14×10 (13×9 internal corners) |
+| Cameras              | 2× USB 2K Quad-HD webcams (F-A489 model)  |
+| Environment          | Indoor with stable lighting               |
+| Target object        | Mini drone or colored marker              |
+| Stereo baseline      | Rigid stereo rig with fixed spacing       |
 
-Lightweight quadcopter drone
+---
 
-💻 Software
+## 🛠️ Tools & Technologies
 
-Python
+### 🔧 Hardware
 
-OpenCV – image capture, stereo matching, calibration
+- 🖥️ 2× USB Quad-HD webcams (F-A489 model or similar)  
+- 📏 A3 printed calibration chessboard  
+- 🚁 Lightweight quadcopter drone or color marker  
 
-NumPy – numerical operations
+### 💻 Software
 
+- 🐍 Python 3.x  
+- 📷 OpenCV – stereo vision, image processing, calibration  
+- 🔢 NumPy – matrix and array operations  
+- 📈 Matplotlib – 3D visualization of tracked points  
 
-**🖼️ Calibration Workflow**
+---
 
-![image](https://github.com/user-attachments/assets/bea68b14-f4af-40aa-9bf6-8f152d1d8c7b)
-![image](https://github.com/user-attachments/assets/fc5b2436-17bb-44a4-b301-035a30a380cc)
-![image](https://github.com/user-attachments/assets/2504c4ed-71ed-415c-b1cb-679e89619da9)
+## 🚀 How to Run
 
-Detect chessboard corners in both camera views.
+1. **Connect both USB cameras** to your system  
+2. **Calibrate stereo setup**:
 
-Capture valid stereo image pairs (SPACE) and save.
-
-Perform:
-
-Monocular calibration for each camera
-
-Stereo calibration to compute rotation R and translation T
-
-Apply image rectification to align stereo images.
-
-
-**🧠 Depth Estimation & Drone Tracking**
-
-Compute disparity maps using StereoSGBM algorithm (high accuracy).
-
-Apply image rectification for better pixel alignment.
-
-Use contour detection on disparity map to find drone location.
-
-Plot and annotate 3D position of the drone.
-
-
-**🏁 How to Run**
-
-Connect both cameras.
-
-Place and move chessboard in front of both views.
-
-Run the calibration script:
+```bash
 python stereo_calibrate.py
 
-Capture 10 valid chessboard pairs (press SPACE).
+## 🔍 Sample Results
 
-Run the tracking script:
-python drone_tracking.py
+- ✔️ Accurate disparity and depth reconstruction  
+- ✔️ Stable 3D localization  
+- ✔️ Live 3D visualization of drone path  
 
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/9f28aa7e-2cad-478b-a797-824c22f0ef41" width="60%" />
+</p>
 
-**🔍 Sample Results**
+---
 
-Disparity maps showing depth variation
-![image](https://github.com/user-attachments/assets/e879e29c-ee57-4547-a029-2a1609b10b8b)
+## 🧩 Possible Improvements
 
-Plotted position of drone in each frame
-![image](https://github.com/user-attachments/assets/9f28aa7e-2cad-478b-a797-824c22f0ef41)
-![image](https://github.com/user-attachments/assets/99f9c240-6fa3-484a-b9b8-fb7670cb4ff4)
+| Feature                          | Status       |
+|---------------------------------|--------------|
+| Kalman filter for smoother tracking | 🚧 Planned   |
+| Integration with drone flight API    | 🚧 Planned   |
+| Web dashboard (Plotly / WebSocket)   | 🧪 Prototype |
+| Outdoor calibration + tracking        | ❌ Not yet   |
 
-Robust calibration using OpenCV’s reliable vision tools
+---
 
+## 📄 License
 
-**🧩 Possible Improvements**
-
-Real-time visual tracking with Kalman filtering
-
-Integration with drone control API
-
-Web dashboard for 3D visualization
-
-Outdoor calibration & tracking
-
-
-**📄 License**
-
-OpenCV is licensed for free commercial use.
-
-This project is intended for educational and research purposes.
+OpenCV is free for academic and commercial use.  
+This project is released under an open **educational & research license**.
